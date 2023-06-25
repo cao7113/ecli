@@ -1,18 +1,19 @@
-defmodule HelloCli.MixProject do
+defmodule Ecli.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :hello_cli,
+      app: :ecli,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # https://hexdocs.pm/mix/Mix.Tasks.Escript.Build.html
       escript: [
-        name: :eops,
-        # path: "bin/eops",
-        main_module: HelloCli,
+        app: nil,
+        name: :ecli,
+        # path: "bin/ecli",
+        main_module: Ecli,
         comment: "A sample escript"
       ]
     ]

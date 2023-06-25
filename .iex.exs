@@ -1,1 +1,2 @@
-alias HelloCli, as: Cli
+require Logger
+alias Logger, as: L

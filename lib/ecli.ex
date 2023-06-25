@@ -1,9 +1,9 @@
-defmodule HelloCli do
+defmodule Ecli do
   @moduledoc """
   Prints args, possibly multiple times.
 
   Usage:
-    $ eops {options} arg1 arg2 ...
+    $ ecli {options} arg1 arg2 ...
 
   Options:
     --verbose     Add more info.
