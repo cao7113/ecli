@@ -1,72 +1,65 @@
 defmodule Ecli do
   @moduledoc """
-  Prints args, possibly multiple times.
+  Ecli - Cli with escript in elixir
 
-  Usage:
-    $ ecli {options} arg1 arg2 ...
-
-  Options:
-    --verbose     Add more info.
-    --count=n     Print n times.
+  Ref mix impl.
+  https://github.com/elixir-lang/elixir/blob/v1.15.0/lib/mix/lib/mix/cli.ex#L1C1-L1C1
   """
 
-  def main([]), do: IO.puts(@moduledoc)
-  def main([opt]) when opt in ["-h", "--help"], do: IO.puts(@moduledoc)
+  @switches [
+    verbose: :boolean,
+    help: :boolean
+  ]
+  @aliases [v: :verbose]
 
   def main(args) do
-    {opts, pargs, errors} = args |> parse_args
+    case check_for_shortcuts(args) do
+      :help ->
+        display_usage()
 
-    case errors do
-      [] ->
-        process_args(opts, pargs)
-        show_jason(pargs)
+      # :version ->
+      #   display_version()
 
-      _ ->
-        errors |> IO.inspect(label: "Bad options")
-        IO.puts(@moduledoc)
+      nil ->
+        {_opts, args} = OptionParser.parse!(args, switches: @switches, aliases: @aliases)
+        act = List.first(args)
+
+        case act do
+          "req" ->
+            if length(args) < 2 do
+              raise "require url in req action, like https://api.github.com/repos/elixir-lang/elixir"
+            end
+
+            url = Enum.at(args, 1)
+            {:ok, _} = Application.ensure_all_started(:req)
+            req = Eclient.get!(url)
+            output("body: \n#{req.body |> inspect}")
+        end
     end
   end
 
-  defp parse_args(args) do
-    args
-    |> OptionParser.parse(
-      strict: [
-        verbose: :boolean,
-        count: :integer
-      ],
-      aliases: [c: :count]
-    )
+  defp display_usage do
+    output("""
+    Ecli is a tool with Elixir
 
-    # {opts, cmd_and_args, errors}
+    Usage: ecli [action]
+
+    Examples:
+
+        ecli             - show help
+        ecli req API_URL - try api endpoint
+
+    The --help and --version options can be given for usage and versioning information.
+    """)
   end
 
-  defp process_args(opts, args) do
-    count = Keyword.get(opts, :count, 1)
-
-    printfn =
-      if Keyword.has_key?(opts, :verbose) do
-        fn arg ->
-          IO.write("Message: ")
-          IO.puts(arg)
-        end
-      else
-        fn arg ->
-          IO.puts(arg)
-        end
-      end
-
-    Stream.iterate(0, &(&1 + 1))
-    |> Stream.take(count)
-    |> Enum.each(fn _counter ->
-      Enum.with_index(args, fn arg, idx ->
-        printfn.("#{idx}. #{arg}")
-      end)
-    end)
+  def output(info) do
+    IO.puts(info)
   end
 
-  defp show_jason(args) do
-    args
-    |> Jason.encode!()
-    |> IO.inspect(label: "JSON content")
-  end
+  # Check for --help or --version in the args
+  defp check_for_shortcuts([]), do: :help
+  defp check_for_shortcuts([arg]) when arg in ["--help", "-h"], do: :help
+  defp check_for_shortcuts([arg]) when arg in ["--version", "-v"], do: :version
+  defp check_for_shortcuts(_), do: nil
 end

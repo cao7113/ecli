@@ -10,19 +10,26 @@ defmodule Ecli.MixProject do
       deps: deps(),
       # https://hexdocs.pm/mix/Mix.Tasks.Escript.Build.html
       escript: [
+        main_module: Ecli,
         app: nil,
         name: :ecli,
         # path: "bin/ecli",
-        main_module: Ecli,
-        comment: "A sample escript"
-      ]
+        comment: "cli with escript"
+      ],
+      aliases: aliases()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :inets]
+    ]
+  end
+
+  def aliases do
+    [
+      up: "cmd MIX_ENV=prod mix escript.install --force"
     ]
   end
 
@@ -31,7 +38,8 @@ defmodule Ecli.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
-      {:jason, ">0.0.0"}
+      # {:jason, "~> 1.4"},
+      {:req, "~> 0.3"}
     ]
   end
 end

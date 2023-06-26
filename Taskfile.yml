@@ -11,8 +11,3 @@ tasks:
   # elixir -S mix run --no-halt --detached
   # put into local paths
   build: mix escript.build --force
-  # install into PATH
-  # mix do escript.build + escript.install
-  install: mix escript.build escript.install bin/ecli --force
-  script: mix escript
-  create: mix new ecli --app ecli
