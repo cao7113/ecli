@@ -1,36 +1,54 @@
-defmodule HelloCli.MixProject do
+defmodule Ecli.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
   def project do
     [
-      app: :hello_cli,
-      version: "0.1.0",
-      elixir: "~> 1.14",
+      app: :ecli,
+      version: @version,
+      elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      # https://hexdocs.pm/mix/Mix.Tasks.Escript.Build.html
-      escript: [
-        name: :eops,
-        # path: "bin/eops",
-        main_module: HelloCli,
-        comment: "A sample escript"
-      ]
+      escript: escript(),
+      aliases: aliases()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      # :mix
       extra_applications: [:logger]
+    ]
+  end
+
+  # Escript config: https://hexdocs.pm/mix/Mix.Tasks.Escript.Build.html
+  def escript() do
+    [
+      main_module: Ecli.CLI,
+      app: nil,
+      name: :ecli,
+      path: escript_path(Mix.env()),
+      comment: "cli with escript"
+    ]
+  end
+
+  def escript_path(:dev), do: "_build/ecli"
+  def escript_path(_), do: nil
+
+  def aliases do
+    [
+      up: "cmd MIX_ENV=prod mix escript.install --force"
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
-      {:jason, ">0.0.0"}
+      {:git_ops, "~> 2.0", only: [:dev], runtime: false},
+      # mix igniter.install git_ops
+      {:igniter, "~> 0.5", only: [:dev, :test]}
+      # {:req, "~> 0.5"}
     ]
   end
 end

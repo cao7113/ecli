@@ -1,10 +1,41 @@
 # https://taskfile.dev
 version: "3"
-tasks:
-  sh: iex -S mix
-  # put into local paths
-  build: mix deps.get escript.build
-  # install into PATH
-  install: mix escript.install
+vars:
+  CLI_PATH: _build/ecli
 
-  create: mix new hello-cli-elixir --app eops
+tasks:
+  default: mix test
+
+  sh: iex -S mix
+  sh2: elixir -S mix run # --no-halt --detached
+
+  run: |
+    {{.CLI_PATH}} -- ${{.CLI_ARGS}}
+
+  h: |
+    {{.CLI_PATH}} -h 
+  
+  build:
+    aliases: ["b"] 
+    cmds:
+    - mix escript.build --force
+
+  install:
+    aliases: ["i"]
+    cmds:
+    - mix escript.install {{.CLI_PATH}} --force
+    
+  gi: mix escript.install github cao7113/ecli --force
+
+  ls: mix escript
+
+  stats: 
+    aliases: ["s"]
+    cmds: 
+    - |
+      ls -lh {{.CLI_PATH}}
+
+  ## Git ops
+  ops.up: mix git_ops.release --yes && git push --follow-tags
+  prj.info: mix git_ops.project_info
+  ops.init: mix git_ops.release --initial
