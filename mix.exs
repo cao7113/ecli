@@ -54,7 +54,9 @@ defmodule Ecli.MixProject do
     [
       {:git_ops, "~> 2.0", only: [:dev], runtime: false},
       # mix igniter.install git_ops
-      {:igniter, "~> 0.7", only: [:dev, :test]}
+      {:igniter, "~> 0.7", only: [:dev, :test]},
+      # require for publish hex package
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
       # {:req, "~> 0.5"}
     ]
   end

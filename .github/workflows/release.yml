@@ -41,4 +41,4 @@ jobs:
           mix hex.publish --yes --replace
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
+          # MIX_ENV: prod
