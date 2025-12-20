@@ -40,7 +40,7 @@ defmodule Ecli.MixProject do
     ]
   end
 
-  def escript_path(:dev), do: "_build/ecli"
+  # def escript_path(:dev), do: "_build/ecli"
   def escript_path(_), do: nil
 
   def aliases do

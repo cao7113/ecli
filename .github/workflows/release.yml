@@ -33,11 +33,12 @@ jobs:
           restore-keys: ${{ runner.os }}-mix-
 
       - name: Install dependencies
-        run: mix deps.get
+        run: mix deps.get # --only prod
 
       - name: Publish hex package
         run: |
-          mix archive.build
+          mix escript.build
           mix hex.publish --yes --replace
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+          MIX_ENV: prod

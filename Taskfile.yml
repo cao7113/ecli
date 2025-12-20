@@ -1,7 +1,7 @@
 # https://taskfile.dev
 version: "3"
 vars:
-  CLI_PATH: _build/ecli
+  CLI_PATH: ecli
 
 tasks:
   default: mix test
