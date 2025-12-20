@@ -47,7 +47,7 @@ defmodule Ecli.MixProject do
     [
       {:git_ops, "~> 2.0", only: [:dev], runtime: false},
       # mix igniter.install git_ops
-      {:igniter, "~> 0.5", only: [:dev, :test]}
+      {:igniter, "~> 0.7", only: [:dev, :test]}
       # {:req, "~> 0.5"}
     ]
   end
