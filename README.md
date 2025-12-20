@@ -13,9 +13,8 @@ $> ecli info
 
 ## Todo
 
-- github action: hex publish optimize
 - reqer dependency
-- time.tc vs mix httpc
+  - time.tc vs mix httpc
 
 ## Installation
 

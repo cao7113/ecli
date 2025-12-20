@@ -6,16 +6,19 @@ defmodule Ecli.CLI do
   - [mix cli](https://github.com/elixir-lang/elixir/blob/main/lib/mix/lib/mix/cli.ex#L11)
   """
 
-  require Logger
+  alias Ecli.Util
+  import IO, only: [puts: 1]
 
   @switches [
     help: :boolean,
-    verbose: :boolean,
+    debug: :boolean,
+    sleep: :integer,
     url: :string
   ]
   @aliases [
     h: :help,
-    v: :verbose,
+    d: :debug,
+    s: :sleep,
     u: :url
   ]
 
@@ -23,43 +26,51 @@ defmodule Ecli.CLI do
   escript cli entry
   """
   def main(args) do
-    {opts, args} = OptionParser.parse_head!(args, strict: @switches, aliases: @aliases)
+    begin_at = System.monotonic_time()
+    {opts, args} = OptionParser.parse!(args, strict: @switches, aliases: @aliases)
 
     action = List.first(args) || "help"
-    verbose = opts[:verbose]
+    debug? = opts[:debug]
 
     # todo whey is ""
     # version = Ecli.version()
     version = Application.spec(:ecli, :vsn) || "unknown"
 
-    if verbose do
-      Logger.debug("version: #{version} action: #{action}")
+    if debug? do
+      puts("version: #{version} action: #{action} opts: #{opts |> inspect}")
     end
 
     case action do
       "info" ->
+        if n = opts[:sleep] do
+          Process.sleep(n * 100)
+        end
+
         [
           vsn: version,
           build: System.build_info()
         ]
         |> dbg
 
-      # "hi" ->
-      #   # whether other module auto included in final escript, yes!
-      #   Ecli.Hi.ping() |> dbg
-
       a when a in ["fetch", "cget", "url"] ->
         url = Enum.at(args, 2) || "https://httpbin.org/get"
         mix_curl(url, opts)
 
       _ ->
-        IO.puts(helps(vsn: version))
+        puts(helps(action: action, vsn: version))
+    end
+
+    if debug? do
+      duration = Util.get_duration(begin_at) / 1000
+      puts("taken #{duration} ms")
     end
   end
 
   def helps(opts \\ []) do
     ~s"""
     ecli #{opts[:vsn]} usage:
+
+    current action: #{opts[:action]}
 
     support actions:
       - help
@@ -70,16 +81,16 @@ defmodule Ecli.CLI do
   def mix_curl(url, opts \\ []) do
     if Code.loaded?(Mix.Utils) do
       Application.ensure_all_started(:mix)
-      if opts[:verbose], do: IO.puts("url: #{url}")
+      if opts[:verbose], do: puts("url: #{url}")
 
       with {:ok, resp} <- Mix.Utils.read_path(url) do
-        IO.puts(resp)
+        puts(resp)
       else
         err ->
-          Logger.error("error: #{err |> inspect}")
+          puts("error: #{err |> inspect}")
       end
     else
-      Logger.error("not configured extra_applications: [:logger, :mix] in mix.exs")
+      puts("not configured extra_applications: [:logger, :mix] in mix.exs")
     end
   end
 end
