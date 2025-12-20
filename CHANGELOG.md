@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.1.5](https://github.com/cao7113/ecli/compare/v0.1.4...v0.1.5) (2025-12-20)
+
+
+
+
+### Bug Fixes:
+
+* release action deps by Ryn Cao
+
 ## [v0.1.4](https://github.com/cao7113/ecli/compare/v0.1.3...v0.1.4) (2025-12-20)
 
 
