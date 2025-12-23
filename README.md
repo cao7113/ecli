@@ -14,6 +14,7 @@ $> ecli info
 ## Installation
 
 ```
+mix escript.install hex ecli
 mix escript.install github cao7113/ecli
 ecli
 ```
