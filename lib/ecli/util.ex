@@ -6,12 +6,12 @@ defmodule Ecli.Util do
     {{duration, unit}, result}
   end
 
-  def test(unit \\ :microsecond) do
-    measure(fn -> :timer.sleep(100) end, unit)
-  end
-
   def get_duration(begin_at, unit \\ :microsecond, begin_unit \\ :native) do
     (System.monotonic_time() - begin_at)
     |> System.convert_time_unit(begin_unit, unit)
   end
+
+  # def test(unit \\ :microsecond) do
+  #   measure(fn -> :timer.sleep(100) end, unit)
+  # end
 end

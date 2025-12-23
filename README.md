@@ -11,11 +11,6 @@ Cli built on escript with elixir
 $> ecli info
 ```
 
-## Todo
-
-- reqer dependency
-  - time.tc vs mix httpc
-
 ## Installation
 
 ```
