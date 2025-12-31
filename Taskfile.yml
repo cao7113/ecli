@@ -24,9 +24,8 @@ tasks:
     aliases: ["i"]
     cmds:
     - mix escript.install {{.CLI_PATH}} --force
-    
-  gi: mix escript.install github cao7113/ecli --force
   hex.i: mix escript.install hex ecli --force
+  gi: mix escript.install github cao7113/ecli --force
 
   ls: mix escript
 

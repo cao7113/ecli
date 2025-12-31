@@ -56,7 +56,6 @@ defmodule Ecli.MixProject do
       {:igniter, "~> 0.7", only: [:dev, :test]},
       # require for publish hex package
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
-      # {:req, "~> 0.5"}
       # {:req_client, "~> 0.1"}
     ]
   end
